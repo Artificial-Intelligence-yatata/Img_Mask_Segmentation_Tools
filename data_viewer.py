@@ -1,7 +1,7 @@
 import os
 from PyQt5.QtGui import QPixmap, QPainter
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QPushButton, QFileDialog, QVBoxLayout, QHBoxLayout, QTextEdit, QLineEdit
+from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QPushButton, QFileDialog, QVBoxLayout, QHBoxLayout, QTextEdit, QLineEdit, QSlider
 
 class ImageMaskViewer(QWidget):
     def __init__(self):
@@ -11,6 +11,7 @@ class ImageMaskViewer(QWidget):
         self.image_paths = []
         self.mask_paths = []
         self.current_index = 0
+        self.opacity = 0.3 # initial opacity value
 
         self.image_label = QLabel()
         self.mask_label = QLabel()
@@ -55,10 +56,24 @@ class ImageMaskViewer(QWidget):
 
 
 
+
+        # create slider for opacity control
+        opacity_slider = QSlider(Qt.Horizontal)
+        opacity_slider.setRange(0, 100)
+        opacity_slider.setValue(int(self.opacity * 100))
+        opacity_slider.setTickInterval(10)
+        opacity_slider.setTickPosition(QSlider.TicksBelow)
+        opacity_slider.valueChanged.connect(self.set_opacity)
+        main_layout.addWidget(opacity_slider)
+
         self.setLayout(main_layout)
 
 
         self.show()
+
+    def set_opacity(self, value):
+        self.opacity = value / 100.0 # update the opacity value
+        self.show_current() # update the current image and mask
 
     def set_index_label(self):
         self.index_label.setText(f"Image {self.current_index + 1}/{len(self.image_paths)}") # set text for index label
@@ -74,7 +89,7 @@ class ImageMaskViewer(QWidget):
         painter = QPainter(overlay)
 
         painter.drawPixmap(0, 0, image)
-        painter.setOpacity(0.3)
+        painter.setOpacity(self.opacity)
         painter.drawPixmap(0, 0, mask)
         del painter
         
