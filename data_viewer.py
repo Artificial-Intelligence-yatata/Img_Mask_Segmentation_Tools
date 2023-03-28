@@ -1,5 +1,5 @@
 import os
-from PyQt5.QtGui import QPixmap
+from PyQt5.QtGui import QPixmap, QPainter
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QPushButton, QFileDialog, QVBoxLayout, QHBoxLayout, QTextEdit, QLineEdit
 
@@ -14,12 +14,16 @@ class ImageMaskViewer(QWidget):
 
         self.image_label = QLabel()
         self.mask_label = QLabel()
+        self.overlay_label = QLabel()
+
         self.prev_button = QPushButton('Previous')
         self.next_button = QPushButton('Next')
         self.mark_button = QPushButton('Mark')
+
         self.file_text_edit = QTextEdit()
         self.file_name_label = QLabel()
         self.index_edit = QLineEdit()
+
         self.index_search_button = QPushButton('Go to index')
         self.index_search_button.clicked.connect(self.go_to_index)
 
@@ -31,6 +35,8 @@ class ImageMaskViewer(QWidget):
         image_layout = QHBoxLayout()
         image_layout.addWidget(self.image_label)
         image_layout.addWidget(self.mask_label)
+        image_layout.addWidget(self.overlay_label)
+
         main_layout.addWidget(self.file_name_label)
         main_layout.addLayout(image_layout)
         button_layout = QHBoxLayout()
@@ -63,8 +69,19 @@ class ImageMaskViewer(QWidget):
         mask_path = self.mask_paths[self.current_index] if self.mask_paths else ''
         image = QPixmap(image_path)
         mask = QPixmap(mask_path)
+
+        overlay = QPixmap(image.size())
+        painter = QPainter(overlay)
+
+        painter.drawPixmap(0, 0, image)
+        painter.setOpacity(0.3)
+        painter.drawPixmap(0, 0, mask)
+        del painter
+        
         self.image_label.setPixmap(image)
         self.mask_label.setPixmap(mask)
+        self.overlay_label.setPixmap(overlay)
+        
         self.file_name_label.setText(os.path.basename(image_path))
         index_label_text = f"Index: {self.current_index + 1}/{len(self.image_paths)}"
         self.index_label.setText(index_label_text)
@@ -97,14 +114,6 @@ class ImageMaskViewer(QWidget):
         self.set_index_label()
         self.show_current()
 
-    def show_current(self):
-        image_path = self.image_paths[self.current_index]
-        mask_path = self.mask_paths[self.current_index] if self.mask_paths else ''
-        image = QPixmap(image_path)
-        mask = QPixmap(mask_path)
-        self.image_label.setPixmap(image)
-        self.mask_label.setPixmap(mask)
-        self.file_name_label.setText(os.path.basename(image_path))
 
     def show_previous(self):
         if self.current_index > 0:
