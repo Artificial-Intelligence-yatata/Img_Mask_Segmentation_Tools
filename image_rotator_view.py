@@ -67,7 +67,7 @@ class ImageRotator:
         self.angle = angle
         
 if __name__ == "__main__":
-    image_path = r"C:\Users\LENOVO\Desktop\Nova pasta\Projetos\Tese_\Work\Dataset\Concrete\Positive\Images\CRACK500_20160222_080933_721_1921.jpg"
-    mask_path = r"C:\Users\LENOVO\Desktop\Nova pasta\Projetos\Tese_\Work\Dataset\Concrete\Positive\Masks\CRACK500_20160222_080933_721_1921.jpg"
+    image_path = "img_path"
+    mask_path = "mask_path"
     ImageRotator(image_path, mask_path)
 
