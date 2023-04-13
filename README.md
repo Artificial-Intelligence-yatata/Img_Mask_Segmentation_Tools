@@ -20,3 +20,5 @@ It allows for quick inspection of Image-Mask Pairs in order to visual evaluate t
 
 Inspect data images and mask for results when applying Random Rotation transformations in data augmentation to detect future problems
 
+![image](https://user-images.githubusercontent.com/98527071/231884549-e41dbccd-9f8f-470d-ac14-e18be53ac283.png)
+![image](https://user-images.githubusercontent.com/98527071/231884643-3856da62-0bda-42a1-a692-49ecba55f739.png)
